@@ -1,32 +1,32 @@
 [submodule "desktop-apps"]
 	path = desktop-apps
-	url = ssh://git@mars.jianguoyun.com:7999/~huangqingming/desktop-apps.git
+	url = ssh://git@mars.jianguoyun.com:7999/ond/desktop-apps.git
 	branch = nutstore
 [submodule "desktop-sdk"]
 	path = desktop-sdk
-	url = ssh://git@mars.jianguoyun.com:7999/~huangqingming/desktop-sdk.git
+	url = ssh://git@mars.jianguoyun.com:7999/ond/desktop-sdk.git
 	branch = nutstore
 [submodule "core"]
 	path = core
-	url = ssh://git@mars.jianguoyun.com:7999/~huangqingming/core.git
+	url = ssh://git@mars.jianguoyun.com:7999/ond/core.git
 	branch = nutstore
 [submodule "sdkjs"]
 	path = sdkjs
-	url = ssh://git@mars.jianguoyun.com:7999/~huangqingming/sdkjs.git
+	url = ssh://git@mars.jianguoyun.com:7999/ond/sdkjs.git
 	branch = nutstore
 [submodule "dictionaries"]
 	path = dictionaries
-	url = ssh://git@mars.jianguoyun.com:7999/~huangqingming/dictionaries.git
+	url = ssh://git@mars.jianguoyun.com:7999/ond/dictionaries.git
 	branch = nutstore
 [submodule "web-apps"]
 	path = web-apps
-	url = ssh://git@mars.jianguoyun.com:7999/~huangqingming/web-apps.git
+	url = ssh://git@mars.jianguoyun.com:7999/ond/web-apps.git
 	branch = nutstore
 [submodule "build_tools"]
 	path = build_tools
-	url = ssh://git@mars.jianguoyun.com:7999/~huangqingming/build_tools.git
+	url = ssh://git@mars.jianguoyun.com:7999/ond/build_tools.git
 	branch = nutstore
 [submodule "document-templates"]
 	path = document-templates
-	url = ssh://git@mars.jianguoyun.com:7999/~huangqingming/document-templates.git
+	url = ssh://git@mars.jianguoyun.com:7999/ond/document-templates.git
 	branch = nutstore
