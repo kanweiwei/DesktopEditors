@@ -26,3 +26,7 @@
 	path = build_tools
 	url = ssh://git@mars.jianguoyun.com:7999/~huangqingming/build_tools.git
 	branch = nutstore
+[submodule "document-templates"]
+	path = document-templates
+	url = ssh://git@mars.jianguoyun.com:7999/~huangqingming/document-templates.git
+	branch = nutstore
