@@ -1,4 +1,4 @@
-name: Builder Core
+name: Build Core
 
 on: workflow_dispatch
 
@@ -9,14 +9,13 @@ jobs:
       fail-fast: false
       matrix: 
         os: 
-          - macos-latest
-          - windows-latest
+          - windows-2019
         host:
           - x64
         node: 
           - 12
         include: 
-          - os: windows-latest
+          - os: windows-2019
             node: 12
             host: x86
     steps:
@@ -26,8 +25,7 @@ jobs:
 
       - name: Init and Update submodules
         run: |
-          git submodule init
-          git submodule update
+          git submodule update --init --recursive
 
       - name: Clone build_tools
         run: |
@@ -39,33 +37,39 @@ jobs:
           version: 5.15.2
           dir: ${{ github.workspace }}/example/
       
-      - uses: actions/setup-java@v3
-        with:
-          distribution: 'zulu'
-          java-version: '11'
-      
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 12
-          
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '3.x'
-      
       - name: Install grunt
-        run: npm install grunt -g
+        run: npm install grunt -g --force
+
+      - name: Add Windows Kits to PATH
+        if: runner.os == 'Windows'
+        uses: myci-actions/append-to-path-windows@2
+        with:
+          path: C:\Program Files (x86)\Windows Kits\10\Extension SDKs\WindowsDesktop\10.0.20348.0\x64
 
       - name: Build core
+        if: matrix.os != 'windows-2019'
+        run: |
+          cd build_tools/
+          python3 ./configure.py --update=0 --module=core --platform=native --qt-dir=${{ github.workspace }}/example/Qt/5.15.2 --no-apps=1
+          python3 ./make.py
+      
+      - name: Build core on Windows
+        if: matrix.os == 'windows-2019'
+        env:
+          DEPOT_TOOLS_WIN_TOOLCHAIN: 0
+          GYP_MSVS_VERSION: 2017
+          GYP_CHROMIUM_NO_ACTION: 0
         run: |
           cd build_tools/
           python3 ./configure.py --update=0 --module=core --platform=native --qt-dir=${{ github.workspace }}/example/Qt/5.15.2 --no-apps=1
           python3 ./make.py
 
-      - name: ${{ matrix.os }}_${{ matrix.host }}_artifact
+      - name: Upload ${{ matrix.os }}_${{ matrix.host }}_artifact
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.os }}
           path: build_tools/out
           if-no-files-found: error
+          retention-days: 5
           
         

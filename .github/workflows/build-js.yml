@@ -1,0 +1,48 @@
+name: Build Desktop Js
+
+on: workflow_dispatch
+
+jobs:
+  build-js:
+    runs-on: macos-latest
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Init and Update submodules
+        run: git submodule update --init --recursive
+
+      - name: build sdkjs
+        run: |
+          cd sdkjs/build
+          npm install
+          npm install grunt -D
+          npx grunt --desktop --force
+      
+      - name: zip sdkjs
+        run: zip -q -r sdkjs.zip ./sdkjs/deploy
+      
+      - name: build web-apps
+        run: |
+          cd web-apps/build
+          npm install
+          npm install grunt -D
+          npx grunt --desktop --force
+      
+      - name: zip web-apps
+        run: zip -q -r web-apps.zip ./web-apps/deploy/web-apps
+        
+      - name: desktop_js_artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: desktop-js-artifact
+          path: |
+            sdkjs.zip
+            web-apps.zip
+          if-no-files-found: error
+          retention-days: 5
+
+      
+
+
