@@ -9,66 +9,106 @@ jobs:
       fail-fast: false
       matrix: 
         os: 
-          - windows-2019
+          - self-hosted
         host:
           - x64
         node: 
           - 12
         include: 
-          - os: windows-2019
+          - os: self-hosted
             node: 12
             host: x86
     steps:
-      
+      - shell: cmd
+        run: |
+          echo %PATH%
+          ipconfig
+          git config --global http.proxy http://192.168.10.5:7890
+          git config --global https.proxy http://192.168.10.5:7890
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.x' # Version range or exact version of a Python version to use, using SemVer's version range syntax
+          architecture: 'x64' 
+
+      - shell: cmd
+        run: |
+          py -2 -V
+          py -3 -V
+          python3 -V
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v2
+        if: matrix.os != 'self-hosted'
+        with:
+          version: 5.15.2
+          dir: ${{ github.workspace }}/example
+     
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: Zip Core
+        if: matrix.os == 'self-hosted'
+        run: 7z a -tzip changelog.zip ./CHANGELOG.md
+
+
       - name: Init and Update submodules
+        shell: cmd
         run: |
           git submodule update --init --recursive
 
       - name: Clone build_tools
+        shell: cmd
         run: |
           git clone https://github.com/kanweiwei/build_tools
-      
-      - name: Install Qt
-        uses: jurplel/install-qt-action@v2
-        with:
-          version: 5.15.2
-          dir: ${{ github.workspace }}/example/
+     
       
       - name: Install grunt
+        shell: cmd
         run: npm install grunt -g --force
 
-      - name: Add Windows Kits to PATH
+      - name: Add V8 depot tools to PATH
         if: runner.os == 'Windows'
         uses: myci-actions/append-to-path-windows@2
         with:
-          path: C:\Program Files (x86)\Windows Kits\10\Extension SDKs\WindowsDesktop\10.0.20348.0\x64
+          path: ${{github.workspace}}\core\Common\3dParty\v8_89\depot_tools
 
       - name: Build core
-        if: matrix.os != 'windows-2019'
+        if: matrix.os != 'self-hosted'
+        shell: cmd
         run: |
           cd build_tools/
-          python3 ./configure.py --update=0 --module=core --platform=native --qt-dir=${{ github.workspace }}/example/Qt/5.15.2 --no-apps=1
-          python3 ./make.py
+          py -3 ./configure.py --update=0 --module=core --qt-dir=C:\Qt\5.15.2 --no-apps=1
+          py -3 ./make.py
+
+      - name: Configure on Windows
+        if: matrix.os == 'self-hosted'
+        shell: cmd
+        run: |
+          setx DEPOT_TOOLS_WIN_TOOLCHAIN "0"
+          setx GYP_MSVS_VERSION "2019"
+          setx GYP_CHROMIUM_NO_ACTION "0"
+          cd build_tools/
+          py -3 ./configure.py --update=0 --module=core --vs-version=2019 --qt-dir="C:\Qt\5.15.2" --no-apps=1
       
       - name: Build core on Windows
-        if: matrix.os == 'windows-2019'
-        env:
-          DEPOT_TOOLS_WIN_TOOLCHAIN: 0
-          GYP_MSVS_VERSION: 2017
-          GYP_CHROMIUM_NO_ACTION: 0
+        if: matrix.os == 'self-hosted'
         run: |
           cd build_tools/
-          python3 ./configure.py --update=0 --module=core --platform=native --qt-dir=${{ github.workspace }}/example/Qt/5.15.2 --no-apps=1
-          python3 ./make.py
+          doskey python3=C:\Python310\python.exe $*
+          py -3 ./make.py
+            
+
+      - name: Zip Core
+        if: matrix.os == 'self-hosted'
+        shell: cmd
+        run: 7z a -tzip core.zip ./build_tools/out/win_64
 
       - name: Upload ${{ matrix.os }}_${{ matrix.host }}_artifact
         uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.os }}
-          path: build_tools/out
+          path: ./core.zip
           if-no-files-found: error
           retention-days: 5
           
