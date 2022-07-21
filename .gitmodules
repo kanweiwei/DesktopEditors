@@ -1,32 +1,21 @@
 [submodule "desktop-apps"]
 	path = desktop-apps
-	url = ssh://git@mars.jianguoyun.com:7999/ond/desktop-apps.git
-	branch = nutstore
+	url = https://github.com/kanweiwei/desktop-apps.git
 [submodule "desktop-sdk"]
 	path = desktop-sdk
-	url = ssh://git@mars.jianguoyun.com:7999/ond/desktop-sdk.git
-	branch = nutstore
+	url = https://github.com/kanweiwei/desktop-sdk.git
 [submodule "core"]
 	path = core
-	url = ssh://git@mars.jianguoyun.com:7999/ond/core.git
-	branch = nutstore
+	url = https://github.com/kanweiwei/core.git
 [submodule "sdkjs"]
 	path = sdkjs
-	url = ssh://git@mars.jianguoyun.com:7999/ond/sdkjs.git
-	branch = nutstore
+	url = https://github.com/kanweiwei/sdkjs.git
 [submodule "dictionaries"]
 	path = dictionaries
-	url = ssh://git@mars.jianguoyun.com:7999/ond/dictionaries.git
-	branch = nutstore
+	url = https://github.com/kanweiwei/dictionaries.git
 [submodule "web-apps"]
 	path = web-apps
-	url = ssh://git@mars.jianguoyun.com:7999/ond/web-apps.git
-	branch = nutstore
+	url = https://github.com/kanweiwei/web-apps.git
 [submodule "build_tools"]
 	path = build_tools
-	url = ssh://git@mars.jianguoyun.com:7999/ond/build_tools.git
-	branch = nutstore
-[submodule "document-templates"]
-	path = document-templates
-	url = ssh://git@mars.jianguoyun.com:7999/ond/document-templates.git
-	branch = nutstore
+	url = https://github.com/kanweiwei/build_tools.git
