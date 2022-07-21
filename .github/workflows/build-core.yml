@@ -1,0 +1,64 @@
+name: Build Core
+
+on: workflow_dispatch
+
+jobs:
+  build-core:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix: 
+        os: 
+          - self-hosted
+        host:
+          - x64
+        node: 
+          - 12
+    steps:
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.x' # Version range or exact version of a Python version to use, using SemVer's version range syntax
+          architecture: 'x64' 
+
+      - run: |
+          python -V
+          python3 -V
+     
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Init and Update submodules
+        run: |
+          git checkout ${{GITHUB_REF_NAME}} --
+          git submodule update --init --recursive
+          git submodule foreach git checkout ${{GITHUB_REF_NAME}} --
+      
+      - name: Install grunt
+        run: npm install grunt -g --force
+
+      - name: Add V8 depot tools to PATH
+        if: runner.os == 'Windows'
+        uses: myci-actions/append-to-path-windows@2
+        with:
+          path: ${{github.workspace}}\core\Common\3dParty\v8_89\depot_tools
+
+      - name: Configure on Windows
+        if: matrix.os == 'self-hosted'
+        run: |
+          cd build_tools
+          python3 .\configure.py --update=0 --clean=0 --module=core --qt-dir="C:\Qt\Qt5.8.0\5.8" --no-apps=1
+          python3 .\make.py
+
+      - name: Zip Core
+        if: matrix.os == 'self-hosted'
+        run: 7z a -tzip core.zip .\build_tools\out\win_64
+
+      - name: Upload ${{ matrix.os }}_${{ matrix.host }}_artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.os }}
+          path: .\core.zip
+          if-no-files-found: error
+          retention-days: 5
+          
+        
