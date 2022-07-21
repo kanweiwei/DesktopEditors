@@ -15,11 +15,6 @@ jobs:
         node: 
           - 12
     steps:
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '3.x' # Version range or exact version of a Python version to use, using SemVer's version range syntax
-          architecture: 'x64' 
-
       - run: |
           python -V
           python3 -V
@@ -29,9 +24,9 @@ jobs:
 
       - name: Init and Update submodules
         run: |
-          git checkout ${{GITHUB_REF_NAME}} --
+          git checkout ${{github.ref_name}} --
           git submodule update --init --recursive
-          git submodule foreach git checkout ${{GITHUB_REF_NAME}} --
+          git submodule foreach git checkout ${{github.ref_name}} --
       
       - name: Install grunt
         run: npm install grunt -g --force
