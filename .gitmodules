@@ -1,21 +1,28 @@
 [submodule "desktop-apps"]
 	path = desktop-apps
 	url = https://github.com/kanweiwei/desktop-apps.git
+	branch = test
 [submodule "desktop-sdk"]
 	path = desktop-sdk
 	url = https://github.com/kanweiwei/desktop-sdk.git
+	branch = test
 [submodule "core"]
 	path = core
 	url = https://github.com/kanweiwei/core.git
+	branch = test
 [submodule "sdkjs"]
 	path = sdkjs
 	url = https://github.com/kanweiwei/sdkjs.git
+	branch = test
 [submodule "dictionaries"]
 	path = dictionaries
 	url = https://github.com/kanweiwei/dictionaries.git
+	branch = test
 [submodule "web-apps"]
 	path = web-apps
 	url = https://github.com/kanweiwei/web-apps.git
+	branch = test
 [submodule "build_tools"]
 	path = build_tools
 	url = https://github.com/kanweiwei/build_tools.git
+	branch = test
